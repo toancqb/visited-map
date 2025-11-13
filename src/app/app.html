@@ -1,0 +1,12 @@
+<div class="flex flex-col justify-center">
+     <div id="map"></div>
+
+     <div class="visited-list">
+     <h3>Visited Countries ({{ visitedCountries.size }})</h3>
+     <ul>
+          @for(c of visitedCountries; track c) {
+               <li>{{ c }}</li>
+          }    
+     </ul>
+     </div>
+</div>
