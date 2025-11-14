@@ -1,0 +1,17 @@
+<div class="flex flex-col justify-center">
+    <div
+      leaflet
+      [leafletOptions]="mapOptions"
+      (leafletMapReady)="onMapReady($event)"
+      class="h-[70vh] w-full"
+    ></div>
+
+  <div class="visited-list">
+    <h3>Visited Countries ({{ visitedCountries().length }})</h3>
+    <ul>
+      @for(c of visitedCountries(); track c) {
+        <li>{{ c }}</li>
+      }
+    </ul>
+  </div>
+</div>
