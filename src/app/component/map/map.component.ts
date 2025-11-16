@@ -13,8 +13,6 @@ export class MapComponent implements OnInit {
   mapOptions: any;
   map!: L.Map;
   geoJsonLayer!: L.GeoJSON<any>;
-  //visitedCountries = new Set<string>();
-  //visitedCountries: string[] = []
   visitedCountries = signal([] as string[])
 
 
@@ -24,10 +22,11 @@ export class MapComponent implements OnInit {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 10,
           minZoom: 3,
+          noWrap: true,
           attribution: '© OpenStreetMap contributors'
         })
       ],
-      zoom: 1,
+      zoom: 1,      
       center: L.latLng(20, 0)
     };
   }

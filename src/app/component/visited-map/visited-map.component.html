@@ -1,0 +1,28 @@
+<div class="container">
+  <header class="header">
+    <h1>🌍 My Travel Map</h1>
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-number">{{ getVisitedCount() }}</span>
+        <span class="stat-label">Countries Visited</span>
+      </div>
+      <button class="btn-clear" (click)="clearAllVisited()">Clear All</button>
+    </div>
+  </header>
+
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+
+  <aside class="sidebar">
+    <h2>Visited Countries</h2>
+    <div class="country-list">
+      <div *ngIf="visitedCountries.length === 0" class="empty-state">
+        Click on countries in the map to mark them as visited
+      </div>
+      <div *ngFor="let country of visitedCountries" class="country-item">
+        <span>✓ {{ country.name }}</span>
+      </div>
+    </div>
+  </aside>
+</div>
