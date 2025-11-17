@@ -1,40 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 import * as L from 'leaflet';
 import { worldGeoJSON } from "../../../assets/world-110m.geojson";
-import { NgFor, NgIf } from '@angular/common';
-
-interface Country {
-  name: string;
-  code: string;
-  visited: boolean;
-}
+import { Country } from '../domain/country';
 
 @Component({
   selector: 'app-visited-map',
   templateUrl: './visited-map.component.html',
   styleUrls: ['./visited-map.component.css'],
-  imports: [NgIf, NgFor]
+  imports: [MatExpansionModule],
 })
 export class VisitedMapComponent implements OnInit {
+  readonly panelOpenState = signal(true);
+  
   private map!: L.Map;
   private geoJsonLayer!: L.GeoJSON;
   visitedCountries: Country[] = [];
   
   ngOnInit(): void {
     this.initMap();
+    this.loadFromLocalStorage();
     this.loadCountriesGeoJSON();
   }
 
   private initMap(): void {
-    // Initialize the map
     this.map = L.map('map', {
       center: [20, 0],
-      zoom: 2,
+      zoom: 3,
       minZoom: 2,
-      maxZoom: 6
+      maxZoom: 10
     });
 
-    // Add tile layer (OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
       noWrap: true
@@ -63,16 +59,14 @@ export class VisitedMapComponent implements OnInit {
 
   private onEachCountry(feature: any, layer: L.Layer): void {
     const countryName = feature.properties.name;
-    const countryCode = feature.properties.name;
+    const countryCode = feature.properties.name; //code-iso
 
-    // Add hover effect
     layer.on({
       //mouseover: (e) => this.highlightCountry(e),
       //mouseout: (e) => this.resetHighlight(e),
-      click: (e) => this.toggleCountryVisited(countryName, countryCode, e, feature)
+      click: (e) => this.toggleCountryVisited(countryName, countryCode, e)
     });
 
-    // Bind popup
     layer.bindPopup(`<strong>${countryName}</strong><br>Click to mark as visited`);
   }
 
@@ -90,21 +84,15 @@ export class VisitedMapComponent implements OnInit {
     this.geoJsonLayer.resetStyle(e.target);
   }
 
-  private toggleCountryVisited(name: string, code: string, e: L.LeafletMouseEvent, feature: any): void {
-    console.log(feature.properties)
-    console.log(feature.properties.ISO_A3)
-    const country = this.visitedCountries.find(c => c.code === code);
-    
-    if (country) {
-      // Remove from visited
+  private toggleCountryVisited(name: string, code: string, e: L.LeafletMouseEvent): void {
+    if (this.visitedCountries.find(c => c.code === code)) {
       this.visitedCountries = this.visitedCountries.filter(c => c.code !== code);
     } else {
-      // Add to visited
       this.visitedCountries.push({ name, code, visited: true });
     }
 
     // Update the layer style
-    this.geoJsonLayer.resetStyle(e.target);
+    this.resetHighlight(e);
     
     // Update popup
     /*const isVisited = this.isCountryVisited(code);
@@ -113,7 +101,6 @@ export class VisitedMapComponent implements OnInit {
     ).openPopup();
     */
 
-    // Save to localStorage
     this.saveToLocalStorage();
   }
 

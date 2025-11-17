@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MapComponent } from "./component/map/map.component";
 import { VisitedMapComponent } from './component/visited-map/visited-map.component';
 
 @Component({

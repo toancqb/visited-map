@@ -1,4 +1,5 @@
-<div class="container">
+<div class="flex flex-row">
+  <div class="container basic-3/5">
   <header class="header">
     <h1>🌍 My Travel Map</h1>
     <div class="stats">
@@ -13,16 +14,25 @@
   <div class="map-container">
     <div id="map"></div>
   </div>
+</div>
 
-  <aside class="sidebar">
-    <h2>Visited Countries</h2>
-    <div class="country-list">
-      <div *ngIf="visitedCountries.length === 0" class="empty-state">
-        Click on countries in the map to mark them as visited
+  <div class="basic-2/5 min-w-64">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true" (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+        <mat-expansion-panel-header>
+          <mat-panel-title> <h2>Visited Countries</h2> </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="country-list flex flex-col gap-[0.8]">
+          @if(visitedCountries.length === 0) {
+            <div class="empty-state">
+              Click on countries in the map to mark them as visited
+            </div>
+          }
+          @for(country of visitedCountries; track country) {
+            <span class="country-item"> {{ country.name }}</span>
+          }
       </div>
-      <div *ngFor="let country of visitedCountries" class="country-item">
-        <span>✓ {{ country.name }}</span>
-      </div>
-    </div>
-  </aside>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
 </div>
